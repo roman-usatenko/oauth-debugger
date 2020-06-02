@@ -1,18 +1,33 @@
 {
     "servers": {
         "AAD": {
-            "metadata": "https://login.microsoftonline.com/common/.well-known/openid-configuration",
+            "metadata": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzz/.well-known/openid-configuration",
             "params": {
-                "client_id": "id",
-                "client_secret": "secret"
-            }
+                "client_id": "xxxxxxxxxxxxxxxxxxxxxx",
+                "client_secret": "yyyyyyyyyyyyyyyyyyyyyyyyyyy",
+                "scope":"openid",
+                "response_type":"code id_token",
+                "response_mode":"form_post",
+                "redirect_uri":"http://localhost:5000/reply",
+                "nonce":"nonce",
+                "resource":"https://graph.microsoft.com"
+            },
+            "authorize_defaults" :["client_id", "scope", "redirect_uri", "nonce", "response_type", "response_mode", "resource"],
+            "token_defaults" :["client_id", "client_secret", "redirect_uri"]
         },
-        "local": {
-            "metadata": "https://login.microsoftonline.com/common/.well-known/openid-configuration",
+        "AAD_2.0": {
+            "metadata": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzzzzz/v2.0/.well-known/openid-configuration",
             "params": {
-                "client_id": "id",
-                "client_secret": "secret"
-            }
+                "client_id": "xxxxxxxxxxxxxxxxxxxxxxx",
+                "client_secret": "yyyyyyyyyyyyyyyyyyyyyyyy",
+                "scope":"openid",
+                "response_type":"code id_token",
+                "response_mode":"form_post",
+                "redirect_uri":"http://localhost:5000/reply",
+                "nonce":"nonce"
+            },
+            "authorize_defaults" :["client_id", "scope", "redirect_uri", "nonce", "response_type", "response_mode"],
+            "token_defaults" :["client_id", "client_secret", "redirect_uri"]
         }
     }
 }

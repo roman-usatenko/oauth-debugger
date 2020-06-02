@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "$(dirname $0)"
+set FLASK_APP=app.py
+flask run

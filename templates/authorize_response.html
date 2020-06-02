@@ -1,0 +1,47 @@
+{% include 'header.html' %}
+
+    <div class="py-5 text-center">
+        <h2>Authorization Response</h2>
+    </div>
+
+    <div class="text-center">
+        <h4 style="padding-bottom:10px;">Response parameters (via {{response_mode}})</h4>
+    </div>
+    <div class="container">
+
+        {% for param in params %}
+
+        <div class="row py-2">
+            <div class="col-2 text-right align-self-center"><b>{{param}}</b>&nbsp;&nbsp;=</div>
+            <div class="col-8 container align-self-center">
+                <pre class="rounded border bg-white p-3 my-auto">{{params[param]|safe}}</pre>
+            </div>
+            <div class="col-2">
+            {% if 'code' == param %}
+                <a class="btn btn-success" style="width: 100%;" href="/redeem?code={{params[param]}}">Redeem</a>
+            {% endif %}
+            </div>
+
+        </div>
+
+        {% endfor %}
+    </div>
+
+{% include 'scripts.html' %}
+
+    <script>
+        var RESPONSE_MODE = "{{response_mode}}";
+
+        $(document).ready(function () {
+            if (RESPONSE_MODE === "URL fragment" && window.location.hash) {
+                var hash = window.location.hash.substring(1);
+                if(hash != "") {
+                    var urlParts = window.location.href.split('?');
+                    urlParts = urlParts[0].split('#');
+                    window.location.href = urlParts[0] + "-fragment?" + hash;
+                }
+            }
+        });
+    </script>
+
+{% include 'footer.html' %}

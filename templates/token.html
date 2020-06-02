@@ -1,0 +1,83 @@
+{% include 'header.html' %}
+
+<div class="py-5 text-center">
+    <h2>Token Request</h2>
+</div>
+
+<div class="text-center">
+    <h4 style="padding-bottom:10px;">Form parameters</h4>
+</div>
+<div class="container">
+    <form action="/token" method="POST">
+
+        {% for param in params %}
+
+        <div class="row" style="padding-bottom: 7px;">
+            <div class="col-2 text-right align-self-center"><b>{{param}}</b>&nbsp;&nbsp;=</div>
+            <div class="col-8"><input type="text" class="form-control _param" id="{{param}}" name="{{param}}"
+                    value="{{params[param]}}"></div>
+            <div class="col-2 text-right"><a class="btn btn-danger" style="width: 100%;"
+                    onclick="remove('{{param}}')">Remove</a></div>
+        </div>
+
+        {% endfor %}
+
+        <div class="row" style="padding-bottom: 7px;">
+            <div class="col-2"><input type="text" class="form-control" id="_newParam" name="_newParam"></div>
+            <div class="col-8"><input type="text" class="form-control" id="_newParamValue" name="_newParamValue"></div>
+            <div class="col-2 text-right"><a id="updateButton" class="btn btn-success" style="width: 100%;">Add</a></div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" id="sendButton" class="btn btn-primary">Send token request</button>
+        </div>
+    </form>
+</div>
+
+{% include 'scripts.html' %}
+
+<script>
+    function remove(p) {
+        var urlParts = window.location.href.split('?');
+        var params = new URLSearchParams(getQueryString().substring(1));
+        params.delete(p);
+        redirect(urlParts[0] + '?' + params.toString());
+    }
+
+    function getAddition() {
+        if ($("#_newParam").val().trim() != "" && $("#_newParamValue").val().trim() != "") {
+            var result = "&" + encodeURIComponent($("#_newParam").val().trim()) +
+                "=" + encodeURIComponent($("#_newParamValue").val().trim());
+            return result;
+        }
+        return "";
+    }
+
+    function getQueryString() {
+        var result = "";
+        $("._param").each(function (i, e) {
+            result = result +
+                "&" + encodeURIComponent(e.id.trim()) +
+                "=" + encodeURIComponent(e.value.trim());
+        });
+        return "?" + result.substring(1);
+    }
+
+    function updateRequest() {
+        var urlParts = window.location.href.split('?');
+        var url1 = urlParts[0];
+        var url2 = getQueryString();
+        var url3 = getAddition();
+        redirect(url1 + url2 + url3);
+    }
+
+    function redirect(url) {
+        setTimeout(function () { window.location.href = url }, 100);
+    }
+
+    $(document).ready(function () {
+        $("#updateButton").click(updateRequest);
+    });
+</script>
+
+{% include 'footer.html' %}

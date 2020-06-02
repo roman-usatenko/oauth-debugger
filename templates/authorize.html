@@ -1,58 +1,27 @@
-<!doctype html>
-<html lang="en">
+{% include 'header.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>OAuth 2.0 Flow Debugger</title>
-</head>
+        <div class="py-5 text-center">
+            <h2>Authorization Request</h2>
+            <p class="lead">
+                <a target="_blank" href="{{authorize_url}}">
+                    {{authorize_url}}
+                </a>
+            </p>
+        </div>
 
-<body class="bg-light">
-
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal">OAuth 2.0 Flow Debugger</h5>
-        <form class="form-inline">
-
-            <div class="form-group mb-2">
-                <label for="serverSelector">Server&nbsp;&nbsp;&nbsp;</label>
-                <select id="serverSelector" class="form-control">
-                {% for srv in servers %}
-                    <option value="{{srv}}" {{ 'selected' if srv == server else '' }}>{{srv}}</option>
-                {% endfor %}
-                </select>
-            </div>
-        </form>
-    </div>
-
-    <div class="container text-right">
-        <a target="_blank" href="{{metadata_url}}">
-            {{metadata_url}}
-        </a>
-    </div>
-
-    <div class="py-5 text-center">
-        <h2>Authorization Request</h2>
-        <p class="lead" >
-            <a target="_blank" href="{{authorize_url}}">
-                {{authorize_url}}
-            </a>
-        </p>
-    </div>
-
-    <div class="text-center">
-        <h4 style="padding-bottom:10px;">Query string parameters</h4>
-    </div>
-    <div class="container">
+        <div class="text-center">
+            <h4 style="padding-bottom:10px;">Query string parameters</h4>
+        </div>
+        <div class="container">
 
             {% for param in params %}
 
             <div class="row" style="padding-bottom: 7px;">
                 <div class="col-2 text-right align-self-center"><b>{{param}}</b>&nbsp;&nbsp;=</div>
-                <div class="col-8"><input type="text" class="form-control _param" id="{{param}}" name="{{param}}" value="{{params[param]}}"></div>
-                <div class="col-2 text-right"><button type="button" class="btn btn-danger"
-                        style="width: 100%;" onclick="remove('{{param}}')">Remove</button></div>
+                <div class="col-8"><input type="text" class="form-control _param" id="{{param}}" name="{{param}}"
+                        value="{{params[param]}}"></div>
+                <div class="col-2 text-right"><button type="button" class="btn btn-danger" style="width: 100%;"
+                        onclick="remove('{{param}}')">Remove</button></div>
             </div>
 
             {% endfor %}
@@ -66,20 +35,10 @@
             <div class="text-center">
                 <button id="updateButton" class="btn btn-primary">Update request</button>
             </div>
-    </div>
+        </div>
 
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+{% include 'scripts.html' %}
+    
     <script>
         function remove(p) {
             var urlParts = window.location.href.split('?');
@@ -109,9 +68,9 @@
 
         function updateRequest() {
             var urlParts = window.location.href.split('?');
-            var url1 = urlParts[0]; 
-            var url2 = getQueryString(); 
-            var url3 = getAddition(); 
+            var url1 = urlParts[0];
+            var url2 = getQueryString();
+            var url3 = getAddition();
             redirect(url1 + url2 + url3);
         }
 
@@ -124,6 +83,4 @@
         });
     </script>
 
-</body>
-
-</html>
+{% include 'footer.html' %}

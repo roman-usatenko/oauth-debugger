@@ -1,0 +1,55 @@
+{% include 'header.html' %}
+
+    <div class="py-5 text-center">
+        <h2>Token Response Status: {{status}}</h2>
+    </div>
+
+{% if params|length > 0 %}
+
+      {% for param in params %}
+
+      <div class="row py-2">
+          <div class="col-2 text-right align-self-center"><b>{{param}}</b>&nbsp;&nbsp;=</div>
+          <div class="col-8 container align-self-center">
+              <pre class="rounded border bg-white p-3 my-auto">{{params[param]|safe}}</pre>
+          </div>
+          <div class="col-2">
+          {% if 'refresh_token' == param %}
+              <a class="btn btn-success" style="width: 100%;" href="/redeem?refresh_token={{params[param]}}">Redeem</a>
+          {% endif %}
+          </div>
+      </div>
+
+      {% endfor %}
+
+{% else %}
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">Response Content</div>
+            <div class="card-body">
+                {{text}}
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+<div class="container py-3">
+    <div class="card">
+        <div class="card-header"  data-toggle="collapse" data-target="#headers">Response Headers</div>
+        <div class="card-body collapse" id="headers">
+            {% for header in headers %}
+                {{header}}: {{headers[header]}} <br/>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include 'scripts.html' %}
+
+    <script>
+
+    </script>
+
+{% include 'footer.html' %}
