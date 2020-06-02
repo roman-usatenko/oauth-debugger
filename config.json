@@ -1,0 +1,18 @@
+{
+    "servers": {
+        "AAD": {
+            "metadata": "https://login.microsoftonline.com/common/.well-known/openid-configuration",
+            "params": {
+                "client_id": "id",
+                "client_secret": "secret"
+            }
+        },
+        "local": {
+            "metadata": "https://login.microsoftonline.com/common/.well-known/openid-configuration",
+            "params": {
+                "client_id": "id",
+                "client_secret": "secret"
+            }
+        }
+    }
+}
