@@ -4,6 +4,8 @@ import urllib.parse
 import utilz
 import requests
 from flask import Flask, render_template, redirect, url_for, request
+
+
 app = Flask(__name__)
 
 
@@ -74,22 +76,22 @@ def token_post():
     data = request.form.to_dict()
     data.pop("_newParam")
     data.pop("_newParamValue")
-    resp = requests.post(token_url, data)
+    resp = requests.post(token_url, data, verify=False)
     status = str(resp.status_code) + " / " + str(resp.reason)
     text = resp.text
     headers = resp.headers
-    params={}
+    params = {}
     try:
         params = resp.json()
     except:
-        params = {} 
+        params = {}
     params = utilz.process_params(params)
     return render_template('token_response.html',
                            servers=servers,
                            server=server,
                            metadata_url=metadata_url,
                            status=status,
-                           headers = headers,
+                           headers=headers,
                            text=text,
                            params=params)
 
@@ -100,7 +102,7 @@ def reply_get():
     srv = config.get_server_config(server)
     servers = config.get_servers()
     metadata_url = srv["metadata"]
-    
+
     params = utilz.process_params(request.args)
     response_mode = "URL fragment" if len(
         params) == 0 else "query string parameters"
@@ -150,7 +152,7 @@ def reply_post():
 
 @app.route('/reply', methods=['POST'])
 def reply1():
-    return redirect(url_for("reply_post")+ "?" + urllib.parse.urlencode(request.form))
+    return redirect(url_for("reply_post") + "?" + urllib.parse.urlencode(request.form))
 
 
 @app.route('/redeem', methods=['GET'])
@@ -164,4 +166,3 @@ def redeem():
         params["grant_type"] = "refresh_token"
 
     return redirect(url_for("token_get") + "?" + urllib.parse.urlencode(params))
-

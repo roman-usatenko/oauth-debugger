@@ -1,5 +1,5 @@
 import json
-import urllib.request
+import requests
 import os
 
 CONFIG_FILE = os.path.expanduser('~') + '/.oad/config.json'
@@ -20,13 +20,12 @@ def get_first_server_name():
 def get_server_config(server):
     cfg = CONFIG["servers"][server]
     if "urls" not in cfg:
-        with urllib.request.urlopen(cfg["metadata"]) as url:
-            metadata = json.loads(url.read().decode())
+        metadata = requests.get(cfg["metadata"], verify=False).json()
         urls = {}
-        urls["authorization_endpoint"] = metadata["authorization_endpoint"]
-        urls["token_endpoint"] = metadata["token_endpoint"]
-        urls["jwks_uri"] = metadata["jwks_uri"]
-        urls["end_session_endpoint"] = metadata["end_session_endpoint"]
+        urls["authorization_endpoint"] = metadata.get("authorization_endpoint")
+        urls["token_endpoint"] = metadata.get("token_endpoint")
+        urls["jwks_uri"] = metadata.get("jwks_uri")
+        urls["end_session_endpoint"] = metadata.get("end_session_endpoint")
         cfg["urls"] = urls
     return cfg
 
