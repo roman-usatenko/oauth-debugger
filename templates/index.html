@@ -1,0 +1,31 @@
+{% include 'header.html' %}
+
+        <div class="py-5 text-center">
+            <h2>Pick a Server</h2>
+        </div>
+
+        <div class="container">
+
+            {% for srv in servers %}
+
+            <div class="row" style="padding-bottom: 7px;">
+                <div class="col-3 text-right align-self-center">
+                    {% if srv[0] %}
+                    <a href="/server/{{srv[1]}}">{{srv[1]}}</a>
+                    {% else %}
+                        {{srv[1]}}
+                    {% endif %}
+                </div>
+                <div class="col-9">
+                    {% if srv[0] %}
+                    <a href="{{srv[2]}}">{{srv[2]}}</a>
+                    {% else %}
+                        {{srv[2]}}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% endfor %}
+
+{% include 'scripts.html' %}
+{% include 'footer.html' %}

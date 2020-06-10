@@ -10,38 +10,49 @@ app = Flask(__name__)
 
 
 def get_server():
-    server = config.get_first_server_name()
+    server = None
     if "server" in request.cookies:
         srv = request.cookies.get("server")
         if srv in config.get_servers():
-            server = srv
+            cfg = config.get_server_config(srv)
+            if "metadata" in cfg:
+                server = (srv, cfg)
     return server
 
 
 @app.route('/')
 def index():
+    server = get_server()
+    servers = []
+    for srv in config.get_servers():
+        cfg = config.get_server_config(srv)
+        servers.append(("metadata" in cfg, srv, cfg["metadata_url"]))
+    return render_template('index.html',
+                           server=server,
+                           servers=servers)
+
+
+@app.route('/server/<srv>')
+def pick_server(srv):
     resp = redirect(url_for("authorize"))
-    resp.set_cookie("server", get_server())
+    resp.set_cookie("server", srv)
     return resp
 
 
 @app.route('/authorize/', methods=['GET'])
 def authorize():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
     params = request.args
     if len(params) == 0:
-        params = config.get_defaults(server, "authorize")
+        params = config.get_defaults(server[1], "authorize")
         return redirect(request.url + "?" + urllib.parse.urlencode(params))
-    authorize_url = srv["urls"]["authorization_endpoint"] + \
+    authorize_url = server[1]["metadata"]["authorization_endpoint"] + \
         "?" + urllib.parse.urlencode(params)
     return render_template('authorize.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            authorize_url=authorize_url,
                            params=params)
 
@@ -49,30 +60,26 @@ def authorize():
 @app.route('/token/', methods=['GET'])
 def token_get():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
     params = request.args
     if len(params) == 0:
-        params = config.get_defaults(server, "token")
+        params = config.get_defaults(server[1], "token")
         return redirect(request.url + "?" + urllib.parse.urlencode(params))
 
     return render_template('token.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            params=params)
 
 
 @app.route('/token', methods=['POST'])
 def token_post():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
-    token_url = srv["urls"]["token_endpoint"]
+    token_url = server[1]["metadata"]["token_endpoint"]
     data = request.form.to_dict()
     data.pop("_newParam")
     data.pop("_newParamValue")
@@ -87,9 +94,7 @@ def token_post():
         params = {}
     params = utilz.process_params(params)
     return render_template('token_response.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            status=status,
                            headers=headers,
                            text=text,
@@ -99,17 +104,14 @@ def token_post():
 @app.route('/reply', methods=['GET'])
 def reply_get():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
     params = utilz.process_params(request.args)
     response_mode = "URL fragment" if len(
         params) == 0 else "query string parameters"
     return render_template('authorize_response.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            response_mode=response_mode,
                            params=params)
 
@@ -117,17 +119,13 @@ def reply_get():
 @app.route('/reply-fragment/', methods=['GET'])
 def reply_fragment():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
     params = utilz.process_params(request.args)
-    servers = config.get_servers()
     response_mode = "URL fragment"
     return render_template('authorize_response.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            response_mode=response_mode,
                            params=params)
 
@@ -135,17 +133,13 @@ def reply_fragment():
 @app.route('/reply-post/', methods=['GET'])
 def reply_post():
     server = get_server()
-    srv = config.get_server_config(server)
-    servers = config.get_servers()
-    metadata_url = srv["metadata"]
+    if not server:
+        return redirect(url_for("index"))
 
     params = utilz.process_params(request.args)
-    servers = config.get_servers()
     response_mode = "form post"
     return render_template('authorize_response.html',
-                           servers=servers,
                            server=server,
-                           metadata_url=metadata_url,
                            response_mode=response_mode,
                            params=params)
 
@@ -158,7 +152,9 @@ def reply1():
 @app.route('/redeem', methods=['GET'])
 def redeem():
     server = get_server()
-    params = config.get_defaults(server, "token")
+    if not server:
+        return redirect(url_for("index"))
+    params = config.get_defaults(server[1], "token")
     params.update(request.args)
     if "code" in request.args:
         params["grant_type"] = "authorization_code"

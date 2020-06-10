@@ -12,7 +12,7 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-white bg-white shadow-sm" style="position: fixed; top: 0; width: 100%; z-index: 9999;">
-        <span class="navbar-brand">OAuth 2.0 Flow Debugger</span>
+        <span class="navbar-brand"><a class="nav-link" href="/">OAuth 2.0 Flow Debugger</a></span>
         <ul class="navbar-nav mr-auto" style="flex-direction: row;">
             <li class="nav-item p-3">
                 <a class="nav-link" href="/authorize">Authorize</a>
@@ -20,20 +20,16 @@
             <li class="nav-item p-3">
                 <a class="nav-link" href="/token">Token</a>
             </li>
-            <li class="nav-item p-3">
-                <a class="nav-link" target="_blank" href="{{metadata_url}}">Server metadata</a>
-            </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <div class="form-group mb-2">
-                <label class="nav-item" for="serverSelector">Server&nbsp;&nbsp;&nbsp;</label>
-                <select id="serverSelector" class="form-control" onchange="selectServer()">
-                    {% for srv in servers %}
-                    <option value="{{srv}}" {{ 'selected' if srv == server else '' }}>{{srv}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </form>
+        
+        <span style="flex-direction: row;">
+            Server: 
+            {% if server is not none %}
+            <a target="_blank" href="{{server[1]['metadata_url']}}">{{server[0]}}</a>
+            {% else %}
+            [none]
+            {% endif %}
+        </span>
     </nav>
 
     <div class="container" style="padding-top: 90px;">

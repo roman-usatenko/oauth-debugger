@@ -1,7 +1,7 @@
 {
     "servers": {
         "AAD": {
-            "metadata": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzz/.well-known/openid-configuration",
+            "metadata_url": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzz/.well-known/openid-configuration",
             "params": {
                 "client_id": "xxxxxxxxxxxxxxxxxxxxxx",
                 "client_secret": "yyyyyyyyyyyyyyyyyyyyyyyyyyy",
@@ -16,7 +16,7 @@
             "token_defaults" :["client_id", "client_secret", "redirect_uri"]
         },
         "AAD_2.0": {
-            "metadata": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzzzzz/v2.0/.well-known/openid-configuration",
+            "metadata_url": "https://login.microsoftonline.com/zzzzzzzzzzzzzzzzzzzzzzzzzzz/v2.0/.well-known/openid-configuration",
             "params": {
                 "client_id": "xxxxxxxxxxxxxxxxxxxxxxx",
                 "client_secret": "yyyyyyyyyyyyyyyyyyyyyyyy",
