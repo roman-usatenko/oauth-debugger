@@ -14,6 +14,6 @@ def jwt_decode(val):
         jwt = val.split('.')
         protection = json.loads(base64.b64decode(jwt[0]  + "===").decode('utf-8'))
         payload = json.loads(base64.b64decode(jwt[1] + "===").decode('utf-8'))
-        return json.dumps((protection, payload),indent=4)
+        return (json.dumps((protection, payload),indent=4),val)
     except:
-        return html.escape(val)
+        return (html.escape(val),val)

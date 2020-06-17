@@ -11,11 +11,11 @@
       <div class="row py-2">
           <div class="col-2 text-right align-self-center"><b>{{param}}</b>&nbsp;&nbsp;=</div>
           <div class="col-8 container align-self-center">
-              <pre class="rounded border bg-white p-3 my-auto">{{params[param]|safe}}</pre>
+              <pre class="rounded border bg-white p-3 my-auto">{{params[param][0]|safe}}</pre>
           </div>
-          <div class="col-2">
+          <div class="col-2 align-self-center">
           {% if 'refresh_token' == param %}
-              <a class="btn btn-success" style="width: 100%;" href="/redeem?refresh_token={{params[param]}}">Redeem</a>
+              <a class="btn btn-success" style="width: 100%;" href="/redeem?refresh_token={{params[param][1]}}">Redeem</a>
           {% endif %}
           </div>
       </div>
