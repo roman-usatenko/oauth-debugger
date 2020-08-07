@@ -17,8 +17,11 @@
                 <pre class="rounded border bg-white p-3 my-auto">{{params[param][0]|safe}}</pre>
             </div>
             <div class="col-2 align-self-center">
+            {% if 'code' == param or 'token' == param %}
+                <a class="btn btn-primary"  style="color: white; width: 100%;" onclick="copyToClipboard('{{params[param][1]}}')">Copy</a><br>
+            {% endif %}
             {% if 'code' == param %}
-                <a class="btn btn-success" style="width: 100%;" href="/redeem?code={{params[param][1]}}">Redeem</a>
+                &nbsp;<a class="btn btn-success" style="width: 100%;" href="/redeem?code={{params[param][1]}}">Redeem</a>
             {% endif %}
             </div>
 
