@@ -4,10 +4,11 @@ import config
 import urllib.parse
 import utilz
 import requests
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 
 
 app = Flask(__name__)
+
 
 def get_server():
     return (config.SERVER, config.CONFIG)
@@ -122,3 +123,10 @@ def redeem():
         params["grant_type"] = "refresh_token"
 
     return redirect(url_for("token_get") + "?" + urllib.parse.urlencode(params))
+
+
+@app.route('/echo', methods=['GET'])
+def echo():
+    args = request.args.to_dict()
+    print("ECHO: " + str(args))
+    return jsonify(args)
